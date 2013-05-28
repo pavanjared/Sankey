@@ -26,6 +26,10 @@ class Sankey
     @threshold_for_drawing = 0 
     # Width of transformation boxes in pixels
     @box_width = 50
+    #All values will be taken to this root. 1.00 will incur no adjustments
+    @root = 1.00
+    #This ratio is used to adjust box and line heights according to the root
+    @adj_ratio = 1.00
     # Width of the border line on flow lines in pixels
     @flow_edge_width = 2
     # On flow lines, proportion of the horizontal distance to position the control point at
@@ -59,7 +63,14 @@ class Sankey
     @lines[@lineName(datum[0],datum[2])] = new_line
     @line_array.push(new_line)
   
+  rootAdjustment: (data) ->
+    @root_total = 0
+    for datum in data
+	    @root_total = @root_total + Math.pow(datum[1], @root)
+    @adj_ratio = @display_height * @root_total
+	
   setData: (data) ->
+    @rootAdjustment(data)
     for datum in data
       @createLine(datum)
     
@@ -67,6 +78,7 @@ class Sankey
     @bubbles = data
       
   updateData: (data) ->
+    @rootAdjustment(data)
     for datum in data
       line = @lines[@lineName(datum[0],datum[2])]
       if line
@@ -211,7 +223,7 @@ class FlowLine
 
   setFlow: (flow) ->
     @flow = flow
-    @size = @sankey.convert_flow_values_callback(@flow)
+    @size = @sankey.convert_flow_values_callback(@flow*@adj_ratio)
   
   labelText: () ->
     @sankey.convert_flow_labels_callback(@flow)
