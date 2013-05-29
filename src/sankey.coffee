@@ -59,7 +59,8 @@ class Sankey
   
   createLine: (datum) ->
     return if datum[0] == 0
-    new_line = new FlowLine(this,datum[0],datum[1],datum[2])
+    @line_size = datum[1] * @adj_ratio
+    new_line = new FlowLine(this,datum[0],datum[1],@line_size,datum[2])
     @lines[@lineName(datum[0],datum[2])] = new_line
     @line_array.push(new_line)
   
@@ -209,8 +210,8 @@ class Sankey
       undefined
             
 class FlowLine 
-  constructor: (@sankey,left_box_name,flow,right_box_name) ->
-    @setFlow flow
+  constructor: (@sankey,left_box_name,flow,line_size,right_box_name) ->
+    @setFlow flow,line_size
     @colour = undefined
     @ox = 0
     @oy = 0
@@ -221,9 +222,9 @@ class FlowLine
     @left_box.right_lines.push(this)
     @right_box.left_lines.push(this)
 
-  setFlow: (flow) ->
+  setFlow: (flow,line_size) ->
     @flow = flow
-    @size = @sankey.convert_flow_values_callback(@flow*@adj_ratio)
+    @size = @sankey.convert_flow_values_callback(line_size)
   
   labelText: () ->
     @sankey.convert_flow_labels_callback(@flow)
