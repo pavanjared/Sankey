@@ -59,7 +59,7 @@ class Sankey
   
   createLine: (datum) ->
     return if datum[0] == 0
-    @line_size = datum[1] * @adj_ratio
+    @line_size = @adj_ratio * Math.pow(datum[1], @root)
     new_line = new FlowLine(this,datum[0],datum[1],@line_size,datum[2])
     @lines[@lineName(datum[0],datum[2])] = new_line
     @line_array.push(new_line)
