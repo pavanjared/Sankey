@@ -68,7 +68,7 @@ class Sankey
     @root_total = 0
     for datum in data
 	    @root_total = @root_total + Math.pow(datum[1], @root)
-    @adj_ratio = @display_height / @root_total
+    @adj_ratio = @display_height / (@root_total + (data.length/2))
 	
   setData: (data) ->
     @rootAdjustment(data)
