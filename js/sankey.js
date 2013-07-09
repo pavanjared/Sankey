@@ -57,7 +57,7 @@ Licence: MIT Open Source licence http://www.opensource.org/licenses/mit-license.
       if (datum[0] === 0) {
         return;
       }
-      this.line_size = this.adj_ratio * Math.pow(datum[1], this.root);
+      this.line_size = Math.floor(this.adj_ratio * Math.pow(datum[1], this.root));
       new_line = new FlowLine(this, datum[0], datum[1], this.line_size, datum[2]);
       this.lines[this.lineName(datum[0], datum[2])] = new_line;
       return this.line_array.push(new_line);
@@ -71,7 +71,7 @@ Licence: MIT Open Source licence http://www.opensource.org/licenses/mit-license.
         datum = data[_i];
         this.root_total = this.root_total + Math.pow(datum[1], this.root);
       }
-      return this.adj_ratio = this.display_height / this.root_total;
+      return this.adj_ratio = this.display_height / (this.root_total + (data.length/2));
     };
 
     Sankey.prototype.setData = function(data) {
